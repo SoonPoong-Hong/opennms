@@ -61,6 +61,8 @@ Topics:
     File: debian
   - Name: Microsoft Windows
     File: windows
+  - Name: Compatibility Matrix
+    File: compatibility-matrix
 ---
 Name: User Management
 Dir: user-management
@@ -558,6 +560,13 @@ Topics:
 #
 # Newts related Documentation
 #
+Name: Installation
+Dir: install-newts
+Distros: newts
+Topics:
+    - Name: 
+
+---
 Name: Newts
 Dir: newts
 Distros: newts

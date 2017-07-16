@@ -45,3 +45,10 @@ depending on your platform:
 With the _opennms_ meta package all dependencies needed for the components mentioned above are maintained.
 The following sections describe how to install _OpenNMS_ on a single system.
 Dependencies for _Java_ and the _PostgreSQL_ database are maintained with the _opennms_ meta installation package.
+
+This section describes how to install the _OpenNMS_ on different platforms.
+The setup process is described in the following steps:
+
+. Installation of _{product-title}_ software packages
+. Initialize _PostgreSQL_ database and configure access
+. Initialize _{product-title}_ and first start of the application

@@ -1,24 +1,18 @@
 
-// Allow GitHub image rendering
-:imagesdir: ../../images
+[[gi-install-rhel]]
+== RHEL
 
-[[gi-install-opennms]]
-== OpenNMS
+.Install the configuration for a package repository
+[source, shell]
+----
+rpm -Uvh https://yum.opennms.org/repofiles/opennms-repo-${RELEASE}-rhel7.noarch.rpm <1>
+rpm --import https://yum.opennms.org/OPENNMS-GPG-KEY
+----
 
-After configuring the package repository, you are ready to install the _{opennms-product-name}_ packages, configure the database, and initialize the _{opennms-product-name}_ platform.
-
-[[gi-install-opennms-rhel]]
-=== RHEL
-
-This section describes how to install the _OpenNMS_ platform on _CentOS 7.1_.
-The setup process is described in the following steps:
-
-. Installation of the _opennms_ meta package which handles all dependencies
-. Initialize _PostgreSQL_ database and configure access
-. Initialize _OpenNMS_ and first start of the application
+<1> Replace `${RELEASE}` with a release name like `stable` (recommended), `testing`, or `snapshot`.
 
 [[gi-install-opennms-rhel-package]]
-==== Install OpenNMS
+=== Install OpenNMS
 
 .Installation of the full application with all dependencies like PostgreSQL and Java
 [source, shell]
@@ -58,7 +52,7 @@ With the successful installed packages the _OpenNMS_ platform is installed in th
 ----
 
 [[gi-install-opennms-rhel-disable-yum-repo]]
-==== Disable Automatic Updates (Optional)
+=== Disable Automatic Updates (Optional)
 
 We recommend you disable the {opennms-product-name} Yum repository to avoid upgrades while it is running.
 
@@ -78,7 +72,7 @@ yum -y --enablerepo=opennms-repo-stable-common \
 ----
 
 [[gi-install-opennms-rhel-prepare-pg]]
-==== Prepare PostgreSQL
+=== Prepare PostgreSQL
 
 The _CentOS_ package installs but doesn't initialize the _PostgreSQL_ database directory.
 Additionally _OpenNMS_ requires authentication to access the database and are described in this section.

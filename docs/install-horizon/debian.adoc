@@ -1,21 +1,30 @@
 
-// Allow GitHub image rendering
-:imagesdir: ../../images
-
 [[gi-install-opennms-debian]]
-=== Debian
+== Debian/Ubuntu
 
 IMPORTANT: This guide does not apply to OpenNMS Meridian, which can be installed only on Red Hat Enterprise Linux or CentOS systems.
 
-This section describes how to install the _OpenNMS_ platform on _Ubuntu 14.04 LTS_.
-The setup process is described in the following steps:
+Create a new apt source file (eg: `/etc/apt/sources.list.d/opennms.list`), and add the following 2 lines:
 
-. Installation of the _opennms_ meta package which handles all dependencies
-. Initialize _PostgreSQL_ database and configure access
-. Initialize _OpenNMS_ and first start of the application
+.Package repository configuration for Debian-based systems
+[source, shell]
+----
+deb https://debian.opennms.org ${RELEASE} main <1>
+deb-src https://debian.opennms.org ${RELEASE} main <1>
+----
+
+<1> Replace `${RELEASE}` with a release name like `stable` (recommended), `testing`, or `snapshot`.
+
+Import the packages' authentication key with the following command:
+
+.GPG key import for Debian-based systems
+[source, shell]
+----
+wget -O - https://debian.opennms.org/OPENNMS-GPG-KEY | apt-key add -
+----
 
 [[gi-install-opennms-deb-package]]
-==== Install OpenNMS
+=== Install OpenNMS
 
 .Installation of the full application with all dependencies like PostgreSQL and Java
 [source, shell]
@@ -56,7 +65,7 @@ With the successful installed packages the _OpenNMS_ platform is installed in th
 ----
 
 [[gi-install-opennms-deb-disable-update]]
-==== Disable Automatic Updates (Optional)
+=== Disable Automatic Updates (Optional)
 
 We recommend you disable automatic updating of the {opennms-product-name} packages to avoid upgrades while it is running.
 
@@ -88,7 +97,7 @@ sudo apt-mark hold libopennms-java \
 ----
 
 [[gi-install-opennms-deb-prepare-pg]]
-==== Prepare PostgreSQL
+=== Prepare PostgreSQL
 
 The _Debian_ package installs also _PostgreSQL_ database and is already initialized and added in the runlevel configuration.
 It is only necessary to start the _PostgreSQL_ database without a restart.
@@ -151,7 +160,7 @@ vi ${OPENNMS_HOME}/etc/opennms-datasources.xml
 <4> Set the password for administrative access to PostgreSQL
 
 [[gi-install-opennms-deb-init]]
-==== Initialize OpenNMS
+=== Initialize OpenNMS
 
 _OpenNMS_ is now configured to access the database.
 It is required to set the _Java_ environment running _OpenNMS_ and initialize the database schema.
