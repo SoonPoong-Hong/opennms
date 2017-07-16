@@ -45,6 +45,23 @@ Topics:
 #
 # Horizon related Documentation
 #
+Name: Installation
+Dir: install-horizon
+Distros: horizon
+Topics:
+  - Name: Introduction
+    File: introduction
+  - Name: Compatibility Matrix
+    File: compatibility-matrix
+  - Name: Repository
+    File: repository
+  - Name: Red Hat Enterprise Linux
+    File: rhel
+  - Name: Debian/Ubuntu
+    File: debian
+  - Name: Microsoft Windows
+    File: windows
+---
 Name: User Management
 Dir: user-management
 Distros: horizon

@@ -9,6 +9,9 @@ horizon:
     jira/NMS-9508:
       name: 'jira/NMS-9508'
       dir: 'jira/NMS-9508'
+    jira/NMS-9510:
+      name: 'jira/NMS-9510'
+      dir: 'jira/NMS-9510'
 minion:
   name: Minion
   author: OpenNMS Documentation Team <opennms-docs@lists.opennms.org>
@@ -19,6 +22,9 @@ minion:
     jira/NMS-9508:
       name: 'jira/NMS-9508'
       dir: 'jira/NMS-9508'
+    jira/NMS-9510:
+      name: 'jira/NMS-9510'
+      dir: 'jira/NMS-9510'
 newts:
   name: Newts
   author: OpenNMS Documentation Team <opennms-docs@lists.opennms.org>
@@ -29,3 +35,6 @@ newts:
     jira/NMS-9508:
       name: 'jira/NMS-9508'
       dir: 'jira/NMS-9508'
+    jira/NMS-9510:
+      name: 'jira/NMS-9510'
+      dir: 'jira/NMS-9510'
