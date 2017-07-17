@@ -10,6 +10,7 @@ This means that the alarm's _reduction key_ of a defined _Business Service_ must
 Otherwise _bsmd_ is not able to calculate the _Operational Status_ correctly.
 This also applies for removing the _alarm data_ from events associated to _Business Services_
 In addition the child type "IP Service" from the _Business Service Configuration Page_ requires the following events with the default reduction keys being defined:
+
  * uei.opennms.org/nodes/nodeLostService
  * uei.opennms.org/nodes/nodeDown
  * uei.opennms.org/nodes/interfaceDown

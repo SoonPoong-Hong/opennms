@@ -1,6 +1,6 @@
 
 // Allow GitHub image rendering
-:imagesdir: ../../images
+:imagesdir: ./images
 
 === Business Service Hierarchy
 
@@ -20,7 +20,7 @@ The number can be interpreted as how many _Hops_ from the _Focus_ should be show
 
 [[gu-bsm-hierarchy-image]]
 .Business Service Hierarchy components
-image::bsm/02_bsm-service-hierarchy.png[]
+image::02_bsm-service-hierarchy.png[]
 
 <1> A top-level _Business Service_ which depends on other _Business Services_, _Monitored Services_ and _Alarms_ (referenced by _Reduction Key_)
 <2> _Business Service_ as child an the _Operational Status_ is used as input for the top-level _Business Service_
