@@ -61,6 +61,8 @@ Topics:
     File: debian
   - Name: Microsoft Windows
     File: windows
+  - Name: RRD Tool
+    File: rrd-tool
   - Name: Compatibility Matrix
     File: compatibility-matrix
 ---
@@ -564,7 +566,7 @@ Name: Installation
 Dir: install-newts
 Distros: newts
 Topics:
-    - Name: 
+    - Name:
 
 ---
 Name: Newts

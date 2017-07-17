@@ -32,7 +32,7 @@ apt-get install rrdtool
 [[gi-rrdtool-install-source]]
 === Source
 
-If you want the latest version of RRDtool, you may want to compile it from source. Instructions for doing so are at 
+If you want the latest version of RRDtool, you may want to compile it from source. Instructions for doing so are at
 link:https://oss.oetiker.ch/rrdtool/doc/rrdbuild.en.html[rrdbuild].
 
 IMPORTANT: The latest version of RRDtool may not always be compatible with the version of _OpenNMS_ that you want to run.
@@ -61,11 +61,11 @@ yum install jrrd2
 apt-get install jrrd2
 ----
 
-NOTE: With OpenNMS 17.0.0 it is preferred to use _jrrd2_ instead of _jrrd_.
+NOTE: It is preferred to use _jrrd2_ instead of _jrrd_.
       The _jrrd2_ module is improved for performance by adding multithreading capabilities.
 
 [[gi-rrdtool-configure-opennms]]
-=== Configure {opennms-product-name}
+=== Configure _{product-title}_
 
 To configure _OpenNMS_ to use _RRDtool_ instead of _JRobin_ configure the following properties in `rrd-configuration.properties`.
 
