@@ -1,9 +1,9 @@
 
 // Allow GitHub image rendering
-:imagesdir: ../../images
+:imagesdir: ./images
 
 [[gu-bsm-sim-mode]]
-=== Simulation Mode
+== Simulation Mode
 
 To visualize if the configured behavior works as expected, the _Simulation Mode_ can be used to manually set an _Alarm_ status of an _Edge_ element.
 The _Operational Status_ is calculated with the given _Map and Reduce Functions_.
@@ -15,7 +15,7 @@ In figure <<gu-bsm-simulate,BSM Simulation Mode>> the _Menu_ and _Severity_ sett
 
 [[gu-bsm-simulate]]
 .BSM Simulation Mode
-image:bsm/07_bsm-simulation.png[Simulation Mode,400,293]
+image::07_bsm-simulation.png[Simulation Mode,400,293]
 
 NOTE: The _Info Panel_ can be hidden with the _Arrow_ button in the top left corner.
 
