@@ -12,7 +12,7 @@ The figure <<gu-alarm-notes-ui, Alarm Detail View>> shows the component to add t
 
 [[gu-alarm-notes-ui]]
 .Alarm Detail View
-image:alarms/01_alarm-notes.png[]
+image::01_alarm-notes.png[]
 
 The _Alarm Notes_ allows to add two types of notes on an existing _Alarm_ or _Alarm Class_:
 
