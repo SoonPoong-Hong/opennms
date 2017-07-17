@@ -559,16 +559,6 @@ Topics:
     - Name: Kafka
       File: kafka
 ---
-#
-# Newts related Documentation
-#
-Name: Installation
-Dir: install-newts
-Distros: newts
-Topics:
-    - Name:
-
----
 Name: Newts
 Dir: newts
 Distros: newts
