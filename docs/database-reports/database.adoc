@@ -227,6 +227,8 @@ The following example shows the usage of that helper.
 </query-request>]]>
 ------
 
+To get the appropriate `interface descriptor` depends on the input parameter.
+
 [[ga-database-reports-node-source-descriptor]]
 === Usage of the node source descriptor
 
@@ -254,29 +256,6 @@ The following example shows the usage of that helper.
 </query-request>]]>
 ------
 Depending on the input parameters you either get a `node resource descriptor` or a `foreign source/foreign id resource descriptor`.
-
-[[ga-database-reports-interface-descriptor]]
-=== Usage of the interface descriptor
-
-An `interfaceSnmp` is addressed with the exact `interface descriptor`.
-To allow easy access to the `interface descriptor` a helper tool is provided.
-The following example shows the usage of that helper.
-
-.jrxml report snippet to visualize the use of the `interface descriptor`
-[source, xml]
-------
-<parameter name="interface" class="java.lang.String" isForPrompting="false">
-  <parameterDescription><![CDATA[]]></parameterDescription>
-  <defaultValueExpression><![CDATA[org.opennms.netmgt.jasper.helper.MeasurementsHelper.getInterfaceDescriptor($P{snmpifname}, $P{snmpifdescr}, $P{snmpphysaddr})]]></defaultValueExpression>
-</parameter>
-<queryString language="Measurement">
-  <![CDATA[<query-request step="300000" start="$P{startDateTime}" end="$P{endDateTime}" maxrows="2000">
-<source aggregation="AVERAGE" label="IfInOctets" attribute="ifHCInOctets" transient="false" resourceId="node[$P{nodeId}].interfaceSnmp[$P{interface}]"/>
-<source aggregation="AVERAGE" label="IfOutOctets" attribute="ifHCOutOctets" transient="false" resourceId="node[$P{nodeId}].interfaceSnmp[$P{interface}]"/>
-</query-request>]]>
-------
-
-To get the appropriate `interface descriptor` depends on the input parameter.
 
 [[ga-database-reports-https]]
 === Use HTTPS
