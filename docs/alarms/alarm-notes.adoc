@@ -1,8 +1,8 @@
 
-:imagesdir: ../../images
+:imagesdir: ./images
 
 [[gu-alarm-notes]]
-=== Alarm Notes
+== Alarm Notes
 
 _{opennms-product-name}_ creates an _Alarm_ for issues in the network.
 Working with a few people in a team, it is helpful to share information about a current _Alarm_.

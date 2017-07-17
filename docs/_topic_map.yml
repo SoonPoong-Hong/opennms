@@ -51,8 +51,6 @@ Distros: horizon
 Topics:
   - Name: Introduction
     File: introduction
-  - Name: Compatibility Matrix
-    File: compatibility-matrix
   - Name: Repository
     File: repository
   - Name: Red Hat Enterprise Linux
@@ -279,6 +277,8 @@ Name: Alarms
 Dir: alarms
 Distros: horizon
 Topics:
+  - Name: Alarm Notes
+    File: alarm-notes
   - Name: Alarm Sound and Flash
     File: alarm-sound-flash
 ---
@@ -344,6 +344,18 @@ Distros: horizon
 Topics:
   - Name: Introduction
     File: introduction
+  - Name: Business Service Hierarchy
+    File: business-service-hierarchy
+  - Name: Operational Status
+    File: operational-status
+  - Name: Root Cause and Impact Analysis
+    File: root-cause-impact-analysis
+  - Name: Simulation Mode
+    File: simulation-mode
+  - Name: Share Business Views
+    File: share-bsm-view
+  - Name: Change Icons
+    File: change-icons
   - Name: Business Service Definition
     File: business-service-definition
   - Name: Edges
