@@ -50,7 +50,7 @@ public class LocationAwarePollerClientImpl implements LocationAwarePollerClient,
     @Autowired
     private RpcClientFactory rpcClientFactory;
 
-    @Autowired
+    @Autowired(required=false)
     private NodeDao nodeDao;
 
     private RpcClient<PollerRequestDTO, PollerResponseDTO> delegate;

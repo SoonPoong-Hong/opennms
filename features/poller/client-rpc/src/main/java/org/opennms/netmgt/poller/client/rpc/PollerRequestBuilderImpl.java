@@ -136,7 +136,7 @@ public class PollerRequestBuilderImpl implements PollerRequestBuilder {
         request.addAttributes(serviceMonitor.getRuntimeAttributes(request, parameters));
 
         // FIXUP
-        if ("true".equals(parameters.get("use-foreign-id-as-system-id"))) {
+        if ("true".equals(parameters.get("use-foreign-id-as-system-id")) && client.getNodeDao() != null) {
             request.setSystemId(client.getNodeDao().get(service.getNodeId()).getForeignId());
         }
 
