@@ -90,7 +90,7 @@ public class NativeSocketTest {
                         printf("Sending cmd: %s\n", cmd);
 
                         final byte[] data = cmd.getBytes("UTF-8");
-                        final DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 7777);
+                        final DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getByName("127.0.0.1"), 7777);
                         sock.send(p);
 
                         printf("Receiving...\n");
@@ -118,11 +118,13 @@ public class NativeSocketTest {
 
     @Test
     public void testNativeV4() throws Exception {
+        printf("Testing IPv4(%d)\n", NativeDatagramSocket.PF_INET);
         testNative(NativeDatagramSocket.PF_INET, InetAddress.getByName("127.0.0.1"));
     }
 
     @Test
     public void testNativeV6() throws Exception {
+        printf("Testing IPv6(%d)\n", NativeDatagramSocket.PF_INET6);
         testNative(NativeDatagramSocket.PF_INET6, InetAddress.getByName("::1"));
     }
 
@@ -137,17 +139,23 @@ public class NativeSocketTest {
                 final NativeDatagramSocket sock = socket;
                 final FutureTask<NativeDatagramPacket> task = new FutureTask<NativeDatagramPacket>(new Callable<NativeDatagramPacket>() {
                     @Override public NativeDatagramPacket call() throws Exception {
-                        printf("Sending cmd: %s\n", cmd);
-                        final ByteBuffer buf = UTF_8.encode(cmd);
-                        final NativeDatagramPacket p = new NativeDatagramPacket(buf, address, 7777); 
-                        sock.send(p);
+                        try {
+                            printf("Sending %d cmd: %s\n", family, cmd);
+                            final ByteBuffer buf = UTF_8.encode(cmd);
+                            final NativeDatagramPacket p = new NativeDatagramPacket(buf, address, 7777);
+                            sock.send(p);
 
-                        printf("Receiving...\n");
-                        final NativeDatagramPacket r = new NativeDatagramPacket(128);
-                        sock.receive(r);
-                        printf("Received.\n");
+                            printf("Receiving %d...\n", family);
+                            final NativeDatagramPacket r = new NativeDatagramPacket(128);
+                            sock.receive(r);
+                            printf("Received %d.\n", family);
 
-                        return r;
+                            return r;
+                        } catch (final Exception e) {
+                            printf("Failed %d cmd: %s\n", family, cmd);
+                            e.printStackTrace();
+                            throw e;
+                        }
                     }
 
                 });
@@ -157,7 +165,7 @@ public class NativeSocketTest {
                 assertNotNull(r);
 
                 final String response = UTF_8.decode(r.getContent()).toString();
-                printf("Received Response: %s from %s:%d\n", response, r.getAddress().getHostAddress(), r.getPort());
+                printf("Received %d Response: %s from %s:%d\n", family, response, r.getAddress().getHostAddress(), r.getPort());
 
                 assertEquals(cmd, response);
             }
@@ -178,7 +186,7 @@ public class NativeSocketTest {
             final FutureTask<NativeDatagramPacket> task = new FutureTask<NativeDatagramPacket>(new Callable<NativeDatagramPacket>() {
                 @Override public NativeDatagramPacket call() throws Exception {
                     final ByteBuffer buf = UTF_8.encode("msg1");
-                    final NativeDatagramPacket p = new NativeDatagramPacket(buf, InetAddress.getLocalHost(), 7777); 
+                    final NativeDatagramPacket p = new NativeDatagramPacket(buf, InetAddress.getByName("127.0.0.1"), 7777); 
                     sock.send(p);
 
                     final NativeDatagramPacket r = new NativeDatagramPacket(128);
