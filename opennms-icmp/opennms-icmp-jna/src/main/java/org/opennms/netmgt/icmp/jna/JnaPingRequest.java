@@ -50,11 +50,8 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:brozow@opennms.org">Mathew Brozowski</a>
  */
 public class JnaPingRequest implements Request<JnaPingRequestId, JnaPingRequest, JnaPingReply>, EchoPacket {
+    private static final Logger LOG = LoggerFactory.getLogger(JnaPingRequest.class);
 
-	
-	private static final Logger LOG = LoggerFactory
-			.getLogger(JnaPingRequest.class);
-	
     private static long s_nextTid = 1;
 
     public static synchronized final long getNextTID() {
@@ -69,36 +66,36 @@ public class JnaPingRequest implements Request<JnaPingRequestId, JnaPingRequest,
     /**
      * The callback to use when this object is ready to do something
      */
-	private final PingResponseCallback m_callback;
-    
+    private final PingResponseCallback m_callback;
+
     /**
      * How many retries
      */
-	private final int m_retries;
-    
+    private final int m_retries;
+
     /**
      * how long to wait for a response
      */
-	private final long m_timeout;
+    private final long m_timeout;
 
     /**
      * The ICMP packet size including the header
      */
-	
-	private final int m_packetsize;
-	
+
+    private final int m_packetsize;
+
     /**
      * The expiration time of this request
      */
-	private long m_expiration = -1L;
-    
+    private long m_expiration = -1L;
+
     /**
      * The thread logger associated with this request.
      */
-    
-    
-	private final AtomicBoolean m_processed = new AtomicBoolean(false);
-	
+
+
+    private final AtomicBoolean m_processed = new AtomicBoolean(false);
+
     public JnaPingRequest(final JnaPingRequestId id, final long timeout, final int retries, final int packetsize, final PingResponseCallback cb) {
         m_id = id;
         m_retries = retries;
@@ -106,15 +103,15 @@ public class JnaPingRequest implements Request<JnaPingRequestId, JnaPingRequest,
         m_timeout = timeout;
         m_callback = new LogPrefixPreservingPingResponseCallback(cb);
     }
-	
+
     public JnaPingRequest(final InetAddress addr, final int identifier, final int sequenceId, final long threadId, final long timeout, final int retries, final int packetsize, final PingResponseCallback cb) {
         this(new JnaPingRequestId(addr, identifier, sequenceId, threadId), timeout, retries, packetsize, cb);
     }
-    
+
     public JnaPingRequest(final InetAddress addr, final int identifier, final int sequenceId, final long timeout, final int retries, final int packetsize, final PingResponseCallback cb) {
         this(addr, identifier, sequenceId, getNextTID(), timeout, retries, packetsize, cb);
     }
-        
+
     /**
      * <p>processResponse</p>
      *
@@ -155,7 +152,7 @@ public class JnaPingRequest implements Request<JnaPingRequestId, JnaPingRequest,
             setProcessed(true);
         }
     }
-    
+
     /**
      * <p>isExpired</p>
      *
@@ -205,7 +202,7 @@ public class JnaPingRequest implements Request<JnaPingRequestId, JnaPingRequest,
             setProcessed(true);
         }
     }
-    
+
     private void setProcessed(final boolean processed) {
         m_processed.set(processed);
     }
@@ -241,10 +238,13 @@ public class JnaPingRequest implements Request<JnaPingRequestId, JnaPingRequest,
         try {
             //throw new IllegalStateException("The m_request field should be set here!!!");
             LOG.debug("{}: Sending Ping Request: {}", System.currentTimeMillis(), this);
-        
+
             m_expiration = System.currentTimeMillis() + m_timeout;
+            LOG.debug("pre-ping");
             v6.ping(addr6, m_id.getIdentifier(), m_id.getSequenceNumber(), m_id.getThreadId(), 1, 0, m_packetsize);
+            LOG.debug("post-ping");
         } catch (final Throwable t) {
+            LOG.debug("caught throwable");
             m_callback.handleError(getAddress(), this, t);
         }
     }

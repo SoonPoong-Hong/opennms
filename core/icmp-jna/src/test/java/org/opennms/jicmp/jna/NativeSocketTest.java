@@ -46,6 +46,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.opennms.core.utils.InetAddressUtils;
 
 /**
  * NativeSocketTest
@@ -55,14 +56,18 @@ import org.junit.Test;
 public class NativeSocketTest {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private static final int SERVER_PORT = 7777;
+
     private static final ExecutorService m_executor = Executors.newCachedThreadPool();
+
+    private InetAddress m_localhostV4 = InetAddressUtils.getLocalHostAddress();
+    private InetAddress m_localhostV6 = InetAddressUtils.addr("::1");
 
     Server m_server;
 
-
     @Before
     public void setUp() throws Exception {
-        m_server = new Server(7777);
+        m_server = new Server(SERVER_PORT);
         m_server.start();
         m_server.waitForStart();
     }
@@ -90,7 +95,7 @@ public class NativeSocketTest {
                         printf("Sending cmd: %s\n", cmd);
 
                         final byte[] data = cmd.getBytes("UTF-8");
-                        final DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getByName("127.0.0.1"), 7777);
+                        final DatagramPacket p = new DatagramPacket(data, data.length, m_localhostV4, 7777);
                         sock.send(p);
 
                         printf("Receiving...\n");
@@ -119,13 +124,13 @@ public class NativeSocketTest {
     @Test
     public void testNativeV4() throws Exception {
         printf("Testing IPv4(%d)\n", NativeDatagramSocket.PF_INET);
-        testNative(NativeDatagramSocket.PF_INET, InetAddress.getByName("127.0.0.1"));
+        testNative(NativeDatagramSocket.PF_INET, m_localhostV4);
     }
 
     @Test
     public void testNativeV6() throws Exception {
         printf("Testing IPv6(%d)\n", NativeDatagramSocket.PF_INET6);
-        testNative(NativeDatagramSocket.PF_INET6, InetAddress.getByName("::1"));
+        testNative(NativeDatagramSocket.PF_INET6, m_localhostV6);
     }
 
     private void testNative(final int family, final InetAddress address) throws Exception {
@@ -186,7 +191,7 @@ public class NativeSocketTest {
             final FutureTask<NativeDatagramPacket> task = new FutureTask<NativeDatagramPacket>(new Callable<NativeDatagramPacket>() {
                 @Override public NativeDatagramPacket call() throws Exception {
                     final ByteBuffer buf = UTF_8.encode("msg1");
-                    final NativeDatagramPacket p = new NativeDatagramPacket(buf, InetAddress.getByName("127.0.0.1"), 7777); 
+                    final NativeDatagramPacket p = new NativeDatagramPacket(buf, m_localhostV4, 7777);
                     sock.send(p);
 
                     final NativeDatagramPacket r = new NativeDatagramPacket(128);

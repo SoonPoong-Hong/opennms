@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2011-2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2011-2017 The OpenNMS Group, Inc.
+ * OpenNMS(R) is Copyright (C) 1999-2017 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
@@ -28,11 +28,12 @@
 
 package org.opennms.jicmp.jna;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.jna.LastErrorException;
 import com.sun.jna.Platform;
 
 /**
@@ -46,28 +47,31 @@ public abstract class NativeDatagramSocket {
     public static final int AF_INET = 2;
     public static final int PF_INET = AF_INET;
     public static final int AF_INET6 = Platform.isMac() ? 30 
-                                     : Platform.isLinux() ? 10 
-                                     : Platform.isWindows() ? 23 
-                                     : Platform.isFreeBSD() ? 28 
-                                     : Platform.isSolaris() ? 26 
-                                     : -1;
+        : Platform.isLinux() ? 10 
+            : Platform.isWindows() ? 23 
+                : Platform.isFreeBSD() ? 28 
+                    : Platform.isSolaris() ? 26 
+                        : -1;
     public static final int PF_INET6 = AF_INET6;
 
     public static final int SOCK_DGRAM = Platform.isSolaris() ? 1 
-                                        : 2;
+        : 2;
     public static final int SOCK_RAW = Platform.isSolaris() ? 4 
-                                     : 3;
+        : 3;
 
     public static final int IPPROTO_ICMP = 1;
     public static final int IPPROTO_UDP = 17;
     public static final int IPPROTO_ICMPV6 = 58;
+
+    private static ThreadLocal<String> m_classPackage = new ThreadLocal<>();
+    private static ThreadLocal<String> m_classPrefix = new ThreadLocal<>();
 
     public NativeDatagramSocket() {
         if (AF_INET6 == -1) {
             throw new UnsupportedPlatformException(System.getProperty("os.name"));
         }
     }
-    
+
     public static NativeDatagramSocket create(final int family, final int type, final int protocol) throws Exception {
         final String implClassName = NativeDatagramSocket.getImplementationClassName(family);
         LOG.debug("{}({}, {}, {})", implClassName, family, type, protocol);
@@ -76,17 +80,23 @@ public abstract class NativeDatagramSocket {
     }
 
     private static String getClassPackage() {
-        return NativeDatagramSocket.class.getPackage().getName();
-    }
-    
-    private static String getClassPrefix() {
-        return Platform.isWindows() ? "Win32" 
-              : Platform.isSolaris() ? "Sun" 
-              : (Platform.isMac() || Platform.isFreeBSD() || Platform.isOpenBSD()) ? "BSD" 
-              : "Unix";
+        if (m_classPackage.get() == null) {
+            m_classPackage.set(NativeDatagramSocket.class.getPackage().getName());
+        }
+        return m_classPackage.get();
     }
 
-    private static String getFamilyPrefix(int family) {
+    private static String getClassPrefix() {
+        if (m_classPrefix.get() == null) {
+            m_classPrefix.set(Platform.isWindows() ? "Win32" 
+                : Platform.isSolaris() ? "Sun" 
+                    : (Platform.isMac() || Platform.isFreeBSD() || Platform.isOpenBSD()) ? "BSD" 
+                        : "Unix");
+        }
+        return m_classPrefix.get();
+    }
+
+    private static String getFamilyPrefix(final int family) {
         if (AF_INET == family) {
             return "V4";
         } else if (AF_INET6 == family) {
@@ -95,17 +105,24 @@ public abstract class NativeDatagramSocket {
             throw new IllegalArgumentException("Unsupported Protocol Family: "+ family);
         }
     }
-    
-    private static String getImplementationClassName(int family) {
-        return NativeDatagramSocket.getClassPackage()+
-            "."+
-            NativeDatagramSocket.getClassPrefix()+
-            NativeDatagramSocket.getFamilyPrefix(family)+
-            "NativeSocket";
+
+    private static String getImplementationClassName(final int family) {
+        return new StringBuffer(NativeDatagramSocket.getClassPackage())
+                .append(".")
+                .append(NativeDatagramSocket.getClassPrefix())
+                .append(NativeDatagramSocket.getFamilyPrefix(family))
+                .append("NativeSocket").toString();
     }
 
-    public abstract int receive(NativeDatagramPacket p) throws UnknownHostException;
-    public abstract int send(NativeDatagramPacket p);
-    public abstract int close();
-    
+    public abstract int receive(NativeDatagramPacket p) throws IOException;
+    public abstract int send(NativeDatagramPacket p) throws IOException;
+    public abstract int close() throws IOException;
+
+    protected abstract String strerror(final int error) throws LastErrorException;
+    protected abstract IOException translateException(final LastErrorException e);
+
+    public String getError(final LastErrorException e) {
+        return this.strerror(e.getErrorCode());
+    }
+
 }

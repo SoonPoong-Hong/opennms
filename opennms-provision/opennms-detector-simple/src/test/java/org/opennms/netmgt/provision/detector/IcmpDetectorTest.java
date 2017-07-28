@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2008-2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2008-2017 The OpenNMS Group, Inc.
+ * OpenNMS(R) is Copyright (C) 1999-2017 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
@@ -33,7 +33,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.InetAddress;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +48,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({}) 
+@IfProfileValue(name="runPingTests", value="true")
 public class IcmpDetectorTest {
     
     private IcmpDetector m_icmpDetector;
@@ -59,13 +59,7 @@ public class IcmpDetectorTest {
         MockLogAppender.setupLogging();
     }
     
-    @After
-    public void tearDown() {
-        
-    }
-
     @Test(timeout=20000)
-    @IfProfileValue(name="runPingTests", value="true")
     public void testDetectorSuccessJni() throws Exception {
         PingerFactory.setInstance(new JniPinger());
         m_icmpDetector = new IcmpDetector();
@@ -73,7 +67,6 @@ public class IcmpDetectorTest {
     }
 
     @Test(timeout=20000)
-    @IfProfileValue(name="runPingTests", value="true")
     public void testDetectorFailJni() throws Exception {
         PingerFactory.setInstance(new JniPinger());
         m_icmpDetector = new IcmpDetector();
@@ -81,7 +74,6 @@ public class IcmpDetectorTest {
     }
 
     @Test(timeout=20000)
-    @IfProfileValue(name="runPingTests", value="true")
     public void testDetectorSuccess() throws Exception {
         PingerFactory.setInstance(new JnaPinger());
         m_icmpDetector = new IcmpDetector();
@@ -89,7 +81,6 @@ public class IcmpDetectorTest {
     }
 
     @Test(timeout=20000)
-    @IfProfileValue(name="runPingTests", value="true")
     public void testDetectorFail() throws Exception {
         PingerFactory.setInstance(new JnaPinger());
         m_icmpDetector = new IcmpDetector();

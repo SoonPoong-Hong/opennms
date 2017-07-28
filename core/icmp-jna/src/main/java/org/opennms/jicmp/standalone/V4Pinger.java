@@ -28,6 +28,7 @@
 
 package org.opennms.jicmp.standalone;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -101,7 +102,7 @@ public class V4Pinger extends AbstractPinger<Inet4Address> {
     }
     
     @Override
-    public PingReplyMetric ping(Inet4Address addr, int id, int sequenceNumber, int count, long interval) throws InterruptedException {
+    public PingReplyMetric ping(Inet4Address addr, int id, int sequenceNumber, int count, long interval) throws InterruptedException, IOException {
         PingReplyMetric metric = new PingReplyMetric(count, interval);
         addPingReplyListener(metric);
         NativeDatagramSocket socket = getPingSocket();
