@@ -53,7 +53,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 
 @Distributable(DistributionContext.DAEMON)
-public class MinionRpcMonitor extends AbstractServiceMonitor {
+public class MinionRpcMonitor extends AbstractServiceMonitor implements RpcExceptionHandler<PollStatus> {
     private final Supplier<NodeDao> nodeDao = Suppliers.memoize(() -> BeanUtils.getBean("daoContext", "nodeDao", NodeDao.class));
     private final Supplier<RpcClientFactory> rpcClientFactory = Suppliers.memoize(() -> BeanUtils.getBean("daoContext", "camelRpcClientFactory", RpcClientFactory.class));
 
@@ -90,27 +90,7 @@ public class MinionRpcMonitor extends AbstractServiceMonitor {
             final Long responseTime = System.currentTimeMillis() - response.getId();
             return PollStatus.available(responseTime.doubleValue());
         } catch (InterruptedException|ExecutionException t) {
-            return RpcExceptionUtils.handleException(t, new RpcExceptionHandler<PollStatus>() {
-                @Override
-                public PollStatus onInterrupted(Throwable t) {
-                    return PollStatus.unknown("Interrupted.");
-                }
-
-                @Override
-                public PollStatus onTimedOut(Throwable t) {
-                    return PollStatus.unresponsive("Request timed out.");
-                }
-
-                @Override
-                public PollStatus onRejected(Throwable t) {
-                    return PollStatus.unknown("Rejected.");
-                }
-
-                @Override
-                public PollStatus onUnknown(Throwable t) {
-                    return PollStatus.unresponsive("Failed with unknown exception: " + t.getMessage());
-                }
-            });
+            return RpcExceptionUtils.handleException(t, this);
         }
     }
 
@@ -118,5 +98,25 @@ public class MinionRpcMonitor extends AbstractServiceMonitor {
     public String getEffectiveLocation(String location) {
         // Always run in the OpenNMS JVM
         return null;
+    }
+
+    @Override
+    public PollStatus onInterrupted(Throwable t) {
+        return PollStatus.unknown("Interrupted.");
+    }
+
+    @Override
+    public PollStatus onTimedOut(Throwable t) {
+        return PollStatus.unresponsive("Request timed out.");
+    }
+
+    @Override
+    public PollStatus onRejected(Throwable t) {
+        return PollStatus.unknown("Rejected.");
+    }
+
+    @Override
+    public PollStatus onUnknown(Throwable t) {
+        return PollStatus.unresponsive("Failed with unknown exception: " + t.getMessage());
     }
 }
