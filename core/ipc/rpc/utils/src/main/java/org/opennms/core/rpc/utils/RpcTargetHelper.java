@@ -31,8 +31,6 @@ package org.opennms.core.rpc.utils;
 import org.opennms.core.rpc.api.RpcTarget;
 import org.opennms.netmgt.dao.api.NodeDao;
 import org.opennms.netmgt.model.OnmsNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
