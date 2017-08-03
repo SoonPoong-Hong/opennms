@@ -118,17 +118,6 @@ public class PollerRequestBuilderImpl implements PollerRequestBuilder {
             throw new IllegalArgumentException("Monitored service is required.");
         }
 
-        final PollerRequestDTO request = new PollerRequestDTO();
-        request.setSystemId(systemId);
-        request.setClassName(serviceMonitor.getClass().getCanonicalName());
-        request.setServiceName(service.getSvcName());
-        request.setAddress(service.getAddress());
-        request.setNodeId(service.getNodeId());
-        request.setNodeLabel(service.getNodeLabel());
-        request.setNodeLocation(service.getNodeLocation());
-        request.setTimeToLiveMs(ttlInMs);
-        request.addAttributes(attributes);
-
         final RpcTarget target = client.getRpcTargetHelper().target()
                 .withNodeId(service.getNodeId())
                 .withLocation(service.getNodeLocation())
@@ -137,8 +126,17 @@ public class PollerRequestBuilderImpl implements PollerRequestBuilder {
                 .withLocationOverride((s) -> serviceMonitor.getEffectiveLocation(s))
                 .build();
 
+        final PollerRequestDTO request = new PollerRequestDTO();
         request.setLocation(target.getLocation());
         request.setSystemId(target.getSystemId());
+        request.setClassName(serviceMonitor.getClass().getCanonicalName());
+        request.setServiceName(service.getSvcName());
+        request.setAddress(service.getAddress());
+        request.setNodeId(service.getNodeId());
+        request.setNodeLabel(service.getNodeLabel());
+        request.setNodeLocation(service.getNodeLocation());
+        request.setTimeToLiveMs(ttlInMs);
+        request.addAttributes(attributes);
 
         // Retrieve the runtime attributes, which may include attributes
         // such as the agent details and other state related attributes
