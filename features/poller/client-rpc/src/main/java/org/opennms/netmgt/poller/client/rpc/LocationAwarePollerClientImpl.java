@@ -32,6 +32,7 @@ import java.util.Objects;
 
 import org.opennms.core.rpc.api.RpcClient;
 import org.opennms.core.rpc.api.RpcClientFactory;
+import org.opennms.core.rpc.utils.RpcTargetHelper;
 import org.opennms.netmgt.dao.api.NodeDao;
 import org.opennms.netmgt.poller.LocationAwarePollerClient;
 import org.opennms.netmgt.poller.PollerRequestBuilder;
@@ -50,8 +51,8 @@ public class LocationAwarePollerClientImpl implements LocationAwarePollerClient,
     @Autowired
     private RpcClientFactory rpcClientFactory;
 
-    @Autowired(required=false)
-    private NodeDao nodeDao;
+    @Autowired
+    private RpcTargetHelper rpcTargetHelper;
 
     private RpcClient<PollerRequestDTO, PollerResponseDTO> delegate;
 
@@ -84,11 +85,11 @@ public class LocationAwarePollerClientImpl implements LocationAwarePollerClient,
         this.registry = registry;
     }
 
-    public NodeDao getNodeDao() {
-        return nodeDao;
+    public RpcTargetHelper getRpcTargetHelper() {
+        return rpcTargetHelper;
     }
 
-    public void setNodeDao(NodeDao nodeDao) {
-        this.nodeDao = nodeDao;
+    public void setRpcTargetHelper(RpcTargetHelper rpcTargetHelper) {
+        this.rpcTargetHelper = rpcTargetHelper;
     }
 }

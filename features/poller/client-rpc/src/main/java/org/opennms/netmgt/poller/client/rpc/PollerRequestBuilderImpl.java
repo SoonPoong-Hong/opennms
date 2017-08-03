@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import org.opennms.core.rpc.api.RpcTarget;
 import org.opennms.netmgt.poller.MonitoredService;
 import org.opennms.netmgt.poller.PollStatus;
 import org.opennms.netmgt.poller.PollerRequestBuilder;
@@ -118,7 +119,6 @@ public class PollerRequestBuilderImpl implements PollerRequestBuilder {
         }
 
         final PollerRequestDTO request = new PollerRequestDTO();
-        request.setLocation(serviceMonitor.getEffectiveLocation(service.getNodeLocation()));
         request.setSystemId(systemId);
         request.setClassName(serviceMonitor.getClass().getCanonicalName());
         request.setServiceName(service.getSvcName());
@@ -129,16 +129,22 @@ public class PollerRequestBuilderImpl implements PollerRequestBuilder {
         request.setTimeToLiveMs(ttlInMs);
         request.addAttributes(attributes);
 
+        final RpcTarget target = client.getRpcTargetHelper().target()
+                .withNodeId(service.getNodeId())
+                .withLocation(service.getNodeLocation())
+                .withSystemId(systemId)
+                .withServiceAttributes(attributes)
+                .withLocationOverride((s) -> serviceMonitor.getEffectiveLocation(s))
+                .build();
+
+        request.setLocation(target.getLocation());
+        request.setSystemId(target.getSystemId());
+
         // Retrieve the runtime attributes, which may include attributes
         // such as the agent details and other state related attributes
         // which should be included in the request
         final Map<String, Object> parameters = request.getMonitorParameters();
         request.addAttributes(serviceMonitor.getRuntimeAttributes(request, parameters));
-
-        // FIXUP
-        if ("true".equals(parameters.get("use-foreign-id-as-system-id")) && client.getNodeDao() != null) {
-            request.setSystemId(client.getNodeDao().get(service.getNodeId()).getForeignId());
-        }
 
         // Execute the request
         return client.getDelegate().execute(request).thenApply(results -> {
